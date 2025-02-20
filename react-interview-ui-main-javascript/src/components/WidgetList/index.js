@@ -39,8 +39,9 @@ const WidgetList = () => {
   };
 
   const handleDeleteClick = async (widgetName) => {
-    await deleteWidget(widgetName);
-    fetchAll();
+    const res = await deleteWidget(widgetName);
+    setWidgets(res);
+    setAllWidgets(res);
   };
 
   const handleAddWidgetSuccess = () => {
@@ -50,22 +51,22 @@ const WidgetList = () => {
 
   const fetchAll = () => {
     fetchAllWidgets()
-    .then((data) => {
-      setWidgets(data);
-      setAllWidgets(data);
-    })
+      .then((data) => {
+        setWidgets(data);
+        setAllWidgets(data);
+      })
       .catch((error) => console.error("Error fetching widgets", error));
   };
 
-  const handleSearch = () => {   
+  const handleSearch = () => {
     if (!searchKey) {
       setSearchResultError("");
       setShowSearch(false);
       return;
-    } 
-    const foundWidget = searchKey && allWidgets?.find(
-      (w) => w.name.toLowerCase() === searchKey.toLowerCase()
-    );
+    }
+    const foundWidget =
+      searchKey &&
+      allWidgets?.find((w) => w.name.toLowerCase() === searchKey.toLowerCase());
     if (foundWidget) {
       setSearchResult(foundWidget);
       setSearchResultError("");
@@ -83,7 +84,7 @@ const WidgetList = () => {
     if (!inputValue) {
       setSearchResultError("");
       setShowSearch(false);
-    } 
+    }
   };
 
   return (
@@ -105,11 +106,15 @@ const WidgetList = () => {
 
         <Button onClick={handleWidgetAdd}>Add New Widget</Button>
       </Stack>
-      
+
       <Typography sx={{ textAlign: "center" }} variant="h3">
         List of widgets:
       </Typography>
-      {searchResultError && <Typography mt={2} align="center">{searchResultError}</Typography>}
+      {searchResultError && (
+        <Typography mt={2} align="center">
+          {searchResultError}
+        </Typography>
+      )}
       <Grid
         container
         justifyContent="center"
@@ -133,7 +138,7 @@ const WidgetList = () => {
           ))
         )}
       </Grid>
-      
+
       {showWidget && (
         <AddWidget
           open={showWidget}
